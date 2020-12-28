@@ -1,9 +1,9 @@
 package com.revature.service;
 
-import java.io.File;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * This service receives requests from the distribution controller, and then
@@ -15,7 +15,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class DistributionServiceImpl implements DistributionService {
 	/**
-	 * TODO: Document after implementation
+	 * TODO: Document after creating tests
 	 */
 	@Override
 	public List<String> sendEmailsByBatchId(int batchId) {
@@ -24,10 +24,10 @@ public class DistributionServiceImpl implements DistributionService {
 	}
 
 	/**
-	 * TODO: Document after implementation
+	 * TODO: Document after creating tests
 	 */
 	@Override
-	public List<String> sendEmailsByBatchIdAndCSV(int batchId, File csv) {
+	public List<String> sendEmailsByBatchIdAndCSV(int batchId, MultipartFile csv) {
 		// TODO Auto-generated method stub
 		return null;
 	}

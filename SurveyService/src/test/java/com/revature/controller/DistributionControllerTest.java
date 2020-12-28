@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -17,9 +16,11 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.revature.service.DistributionService;
@@ -136,15 +137,19 @@ class DistributionControllerTest {
 	void distributionControllerSendEmailsByBatchIdAndCSV_withoutError() throws Exception {
 
 		// given
+		MockMultipartFile emailFile = new MockMultipartFile("data", "emails.csv", "text/plain", 
+				"acacia.holliday@revature.net, ksenia.milstein@revature.net, zach.leonardo@revature.net".getBytes());
 		final List<String> invalidEmails = new ArrayList<>(Arrays.asList());
 		int validBatchId = 2010;
-		Mockito.when(service.sendEmailsByBatchIdAndCSV(validBatchId, new File("emails.csv"))).thenReturn(invalidEmails);
+		Mockito.when(service.sendEmailsByBatchIdAndCSV(validBatchId, emailFile)).thenReturn(invalidEmails);
 
 		// when
-		RequestBuilder request = MockMvcRequestBuilders.post("/distribute")
-				.param("batchId", Integer.toString(validBatchId)).param("csv", "emails.csv");
+		RequestBuilder request = MockMvcRequestBuilders
+				.multipart("/distribute")
+				.file(emailFile)
+				.param("batchId", Integer.toString(validBatchId));
 		MvcResult result = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
-		verify(service).sendEmailsByBatchIdAndCSV(validBatchId, new File("emails.csv"));
+		verify(service).sendEmailsByBatchIdAndCSV(validBatchId, emailFile);
 
 		// then
 		assertEquals("", result.getResponse().getContentAsString());
@@ -159,15 +164,19 @@ class DistributionControllerTest {
 	void distributionControllerSendEmailsByBatchIdAndCsv_invalidBatchId() throws Exception {
 
 		// given
+		MockMultipartFile emailFile = new MockMultipartFile("data", "emails.csv", "text/plain", 
+				"acacia.holliday@revature.net, ksenia.milstein@revature.net, zach.leonardo@revature.net".getBytes());
 		int invalidBatchId = 3010;
-		Mockito.when(service.sendEmailsByBatchIdAndCSV(invalidBatchId, new File("emails.csv")))
+		Mockito.when(service.sendEmailsByBatchIdAndCSV(invalidBatchId, emailFile))
 				.thenThrow(InvalidBatchIdException.class);
 
 		// when
-		RequestBuilder request = MockMvcRequestBuilders.post("/distribute")
-				.param("batchId", Integer.toString(invalidBatchId)).param("csv", "emails.csv");
-		verify(service).sendEmailsByBatchIdAndCSV(invalidBatchId, new File("emails.csv"));
-		
+		RequestBuilder request = MockMvcRequestBuilders
+				.multipart("/distribute")
+				.file(emailFile)
+				.param("batchId", Integer.toString(invalidBatchId));
+		verify(service).sendEmailsByBatchIdAndCSV(invalidBatchId, emailFile);
+
 		// then
 		mockMvc.perform(request).andExpect(status().isBadRequest());
 
@@ -181,41 +190,50 @@ class DistributionControllerTest {
 	void distributionControllerSendEmailsByBatchIdAndCSV_withInvalidEmail() throws Exception {
 
 		// given
+		MockMultipartFile emailFile = new MockMultipartFile("data", "emails.csv", "text/plain", 
+				"acacia.hollidayrevature.net, ksenia.milstein@revature.net, zach.leonardo@revature.net".getBytes());
 		final List<String> invalidEmails = new ArrayList<>(Arrays.asList("acacia.hollidayrevature.net"));
 		int validBatchId = 2010;
-		Mockito.when(service.sendEmailsByBatchIdAndCSV(validBatchId, new File("emails.csv"))).thenReturn(invalidEmails);
+		Mockito.when(service.sendEmailsByBatchIdAndCSV(validBatchId, emailFile)).thenReturn(invalidEmails);
 
 		// when
-		RequestBuilder request = MockMvcRequestBuilders.post("/distribute")
-				.param("batchId", Integer.toString(validBatchId)).param("csv", "emails.csv");
+		RequestBuilder request = MockMvcRequestBuilders
+				.multipart("/distribute")
+				.file(emailFile)
+				.param("batchId", Integer.toString(validBatchId));
 		MvcResult result = mockMvc.perform(request).andExpect(status().isNotAcceptable()).andReturn();
-		verify(service).sendEmailsByBatchIdAndCSV(validBatchId, new File("emails.csv"));
+		verify(service).sendEmailsByBatchIdAndCSV(validBatchId, emailFile);
 
 		// then
 		assertEquals("acacia.hollidayrevature.net", result.getResponse().getContentAsString());
 
 	}
 
-	/*
-	 * TODO: change to throwing an IOException Checks the SendEmailByCSV method with
-	 * a CSV with an invalid format throws an Exception.
+	/**
+	 * Checks the SendEmailByCSV method with a CSV with an invalid format throws an
+	 * Exception.
 	 */
 	@Test
 	void distributionControllerSendEmailsByBatchId_withInvalidCSV() throws Exception {
-
+		
+		final String EXCEPTION_MESSAGE = "File not found";
 		// given
-		final List<String> invalidEmails = new ArrayList<>(Arrays.asList());
+		MockMultipartFile emailFile = new MockMultipartFile("data", "nonexistingfile.csv", "text/plain", 
+				"acacia.holliday@revature.net, ksenia.milstein@revature.net, zach.leonardo@revature.net".getBytes());
 		int validBatchId = 2010;
-		Mockito.when(service.sendEmailsByBatchIdAndCSV(validBatchId, new File("emails.txt"))).thenReturn(invalidEmails);
+		Mockito.when(service.sendEmailsByBatchIdAndCSV(validBatchId, emailFile))
+				.thenThrow(IOException.class);
 
 		// when
-		RequestBuilder request = MockMvcRequestBuilders.post("/distribute")
-				.param("batchId", Integer.toString(validBatchId)).param("csv", "emails.txt");
-		MvcResult result = mockMvc.perform(request).andExpect(status().isNotAcceptable()).andReturn();
-		verify(service).sendEmailsByBatchIdAndCSV(validBatchId, new File("emails.txt"));
+		RequestBuilder request = MockMvcRequestBuilders
+				.multipart("/distribute")
+				.file(emailFile)
+				.param("batchId", Integer.toString(validBatchId));
+		MvcResult result = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
+		verify(service).sendEmailsByBatchIdAndCSV(validBatchId, emailFile);
 
 		// then
-		assertEquals("acacia.hollidayrevature.net", result.getResponse().getContentAsString());
+		assertEquals(EXCEPTION_MESSAGE, result.getResponse().getContentAsString());
 	}
 
 }
