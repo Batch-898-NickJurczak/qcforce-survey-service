@@ -2,6 +2,8 @@ package com.revature.response;
 
 import java.util.Set;
 
+
+
 /**
  * 
  * @author Chris, Ksenia, Michael M, Yarashlee
@@ -9,7 +11,6 @@ import java.util.Set;
  */
 
 public class EmailResponse {
-	
 	private Set<String> malformedEmails;
 	private Set<String> tokenFailedEmails;
 	private Set<String> sendFailedEmails;

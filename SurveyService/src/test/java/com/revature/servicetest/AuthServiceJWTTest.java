@@ -7,11 +7,17 @@ import java.util.Date;
 import javax.xml.bind.DatatypeConverter;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import com.revature.controller.DistributionController;
 import com.revature.service.AuthService;
+import com.revature.service.AuthServiceJWT;
+import com.revature.service.DistributionService;
 import com.revature.util.InvalidBatchIdException;
 import com.revature.util.InvalidSurveyIdException;
 
@@ -24,7 +30,8 @@ import io.jsonwebtoken.MalformedJwtException;
  * valid surveyId. If this condition is not met, these methods will throw an
  * exception.
  */
-@SpringBootTest
+@ExtendWith(SpringExtension.class)
+@ContextConfiguration(classes = { AuthServiceJWT.class})
 class AuthServiceJWTTest {
 
 	@Autowired
@@ -33,7 +40,7 @@ class AuthServiceJWTTest {
 	/**
 	 * The secret string for the JWT signature.
 	 */
-	@Value("${survey_service.auth_service.secret}")
+	@Value("${survey_service.auth_service.qcforce_token_secret}")
 	private String secret;
 
 	/**
@@ -52,7 +59,7 @@ class AuthServiceJWTTest {
 		Date before = new Date(System.currentTimeMillis());
 		Date beforeExp = new Date(System.currentTimeMillis() + 1000 * 60 * 14);
 		java.util.concurrent.TimeUnit.SECONDS.sleep(1);
-		String token = this.authService.createToken(surveyId, batchId);
+		String token = this.authService.createToken(surveyId, batchId, 1);
 		java.util.concurrent.TimeUnit.SECONDS.sleep(1);
 		Date after = new Date(System.currentTimeMillis());
 		Date afterExp = new Date(System.currentTimeMillis() + 1000 * 60 * 16);
@@ -81,7 +88,7 @@ class AuthServiceJWTTest {
 		int batchId = 2010;
 		int surveyId = -1;
 
-		assertThrows(InvalidSurveyIdException.class, () -> authService.createToken(batchId, surveyId));
+		assertThrows(InvalidSurveyIdException.class, () -> authService.createToken(batchId, surveyId, 1));
 
 	}
 
@@ -95,8 +102,10 @@ class AuthServiceJWTTest {
 
 		int batchId = -1;
 		int surveyId = 1;
+		
+		String string = authService.createToken(batchId, surveyId, 1);
 
-		assertThrows(InvalidBatchIdException.class, () -> authService.createToken(batchId, surveyId));
+		assertThrows(InvalidBatchIdException.class, () -> authService.createToken(batchId, surveyId, 1));
 
 	}
 

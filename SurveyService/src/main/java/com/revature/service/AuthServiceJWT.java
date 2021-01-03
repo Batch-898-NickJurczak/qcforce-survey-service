@@ -22,7 +22,7 @@ public class AuthServiceJWT implements AuthService {
 	/**
 	 * The secret string for the JWT signature.
 	 */
-	@Value("${survey_service.auth_service.secret}")
+	@Value("${survey_service.auth_service.qcforce_token_secret}")
 	private String secret;
 
 	public final int TIME_TO_EXPIRATION = 15 * 60 * 1000;

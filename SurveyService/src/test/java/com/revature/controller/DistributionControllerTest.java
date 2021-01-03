@@ -299,7 +299,7 @@ class DistributionControllerTest {
 	 * 
 	 */
 	@Test
-	void distributionControllerSendEmailsByCsv_withOneMessagingException() throws Exception {
+	void distributionControllerSendEmailsByCsv_withMultipleMessagingException() throws Exception {
 
 		// input parameters
 		final int validBatchId = 2010;
@@ -336,7 +336,7 @@ class DistributionControllerTest {
 	 * Checks the SendEmailByBatchId method with multiple email that failed to send
 	 */
 	@Test
-	void distributionControllerSendEmailsByCSV_withMultipleMessagingException() throws Exception {
+	void distributionControllerSendEmailsByCSV_withOneMessagingException() throws Exception {
 
 		// input parameters
 		final int validBatchId = 2010;
