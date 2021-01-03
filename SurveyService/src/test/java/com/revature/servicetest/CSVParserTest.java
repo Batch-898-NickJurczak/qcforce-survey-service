@@ -8,20 +8,25 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.Set;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.test.context.ContextConfiguration;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.google.common.collect.Sets;
 import com.revature.service.CSVParser;
+import com.revature.service.CSVParserImpl;
 
 @SpringBootTest
+@AutoConfigureMockMvc
+@ContextConfiguration(classes = { CSVParser.class, CSVParserImpl.class })
 class CSVParserTest {
+	
 	@Autowired
 	CSVParser csvParser;
 
@@ -31,11 +36,11 @@ class CSVParserTest {
 	 */
 	@Test
 	void testCSVParser_withValidCSVFormattedFile() {
-		List<String> testEmails = new ArrayList<>(Arrays.asList("acacia.holliday@revature.net",
-				"ksenia.milstein@revature.net", "zach.leonardo@revature.net"));
+		Set<String> testEmails = Sets.newHashSet("acacia.holliday@revature.net",
+				"ksenia.milstein@revature.net", "zach.leonardo@revature.net");
 		MockMultipartFile emailFile = new MockMultipartFile("data", "nonexistingfile.csv", "text/plain",
 				"acacia.holliday@revature.net,ksenia.milstein@revature.net,zach.leonardo@revature.net".getBytes());
-		List<String> actualEmails;
+		Set<String> actualEmails;
 		try {
 			actualEmails = csvParser.parseFileForEmails(emailFile);
 			assertEquals(testEmails, actualEmails);
