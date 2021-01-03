@@ -12,8 +12,6 @@ import com.revature.response.EmailResponse;
 
 public interface DistributionService {
 
-	public EmailResponse sendEmailsByBatchId(int batchId, int surveyId);
-	
 	public EmailResponse sendEmailsByCSV(int batchId, int surveyId, MultipartFile csv);
 	
 }

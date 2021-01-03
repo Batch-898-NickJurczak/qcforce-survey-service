@@ -51,22 +51,6 @@ public class DistributionServiceImpl implements DistributionService {
 	public void setAuthService(AuthService authService) {
 		this.authService = authService;
 	}
-
-	/**
-	 * Sends emails by batch Id. Takes survey id calls email service with batch Id emails 
-	 * received from messaging queue
-	 * and calls auth service with surveyId.
-	 * 
-	 * @param batchId - identifies the batch to recieve emails from
-	 * @param surveyId - identifies the survey to send to batch emails
-	 * @return 
-	 * 
-	 */
-	@Override
-	public EmailResponse sendEmailsByBatchId(int batchId, int surveyId) {
-		
-		return null;
-	}
 	
 	/**
 	 * Distributes survey links to specified emails within the given csv file.

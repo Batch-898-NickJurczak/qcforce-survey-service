@@ -1,7 +1,5 @@
 package com.revature.controller;
 
-import java.util.List;
-
 import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,38 +35,6 @@ public class DistributionController {
 	@Autowired
 	public void setDistributionService(DistributionService distributionService) {
 		this.distributionService = distributionService;
-	}
-
-	/**
-	 * The method will send an email to associates that are in the database for the
-	 * batchId provided.
-	 * 
-	 * @param batchId represents a batch identifier
-	 * @return List of incorrectly formatted emails in the database if any
-	 * @throws JsonProcessingException 
-	 */
-	@PostMapping("/distribute/{surveyId}/{batchId}")
-	private ResponseEntity<String> sendEmailsByBatchId(@PathVariable int surveyId, @PathVariable int batchId) throws JsonProcessingException {
-
-		EmailResponse response;
-		ObjectMapper om = new ObjectMapper();
-		String json;
-
-		try {
-			response = distributionService.sendEmailsByBatchId(batchId, surveyId);
-			json = om.writeValueAsString(response);
-		} catch (InvalidBatchIdException | InvalidSurveyIdException | IllegalArgumentException e) {
-			json = om.writeValueAsString(null);
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(json);
-		}
-
-		if (!response.getMalformedEmails().isEmpty()) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(json);
-		} else if (!response.getStatusMessage().isEmpty()) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(json);
-		} else {
-			return ResponseEntity.status(HttpStatus.OK).body(json);
-		}
 	}
 
 	/**
