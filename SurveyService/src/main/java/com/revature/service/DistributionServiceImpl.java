@@ -1,12 +1,8 @@
 package com.revature.service;
 
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.AddressException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -79,11 +75,13 @@ public class DistributionServiceImpl implements DistributionService {
 	 * @param surveyId the identifier for the survey to distribute.
 	 * @param csv      the file containing associate emails.
 	 * @return
+	 * @throws MessagingException 
 	 * 
 	 */
 	@Override
 	public EmailResponse sendEmailsByCSV(int batchId, int surveyId, MultipartFile csv) {
 		
+
 		// parse list of emails out of csv file
 		
 		// return sendEmail method call

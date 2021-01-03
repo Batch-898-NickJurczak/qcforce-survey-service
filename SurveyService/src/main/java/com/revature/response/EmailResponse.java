@@ -7,11 +7,13 @@ import java.util.Set;
  * @author Chris, Ksenia, Michael M, Yarashlee
  *
  */
+
 public class EmailResponse {
 	
 	private Set<String> malformedEmails;
 	private Set<String> tokenFailedEmails;
 	private Set<String> sendFailedEmails;
+	private String statusMessage;
 	
 	/**
 	 * 
@@ -27,65 +29,57 @@ public class EmailResponse {
 	 * @param sendFailedEmails
 	 */
 	
-	public EmailResponse(Set<String> malformedEmails, Set<String> tokenFailedEmails, Set<String> sendFailedEmails) {
+	public EmailResponse(Set<String> malformedEmails, Set<String> tokenFailedEmails, Set<String> sendFailedEmails, String statusMessage) {
 		super();
 		this.malformedEmails = malformedEmails;
 		this.tokenFailedEmails = tokenFailedEmails;
 		this.sendFailedEmails = sendFailedEmails;
+		this.statusMessage = statusMessage;
 	}
-	/**
-	 * @return the malformedEmails
-	 */
-	
+
 	public Set<String> getMalformedEmails() {
 		return malformedEmails;
 	}
-	
-	/**
-	 * @param malformedEmails the malformedEmails to set
-	 */
+
 	public void setMalformedEmails(Set<String> malformedEmails) {
 		this.malformedEmails = malformedEmails;
 	}
-	
-	/**
-	 * @return the tokenFailedEmails
-	 */
+
 	public Set<String> getTokenFailedEmails() {
 		return tokenFailedEmails;
 	}
-	
-	/**
-	 * @param tokenFailedEmails the tokenFailedEmails to set
-	 */
+
 	public void setTokenFailedEmails(Set<String> tokenFailedEmails) {
 		this.tokenFailedEmails = tokenFailedEmails;
 	}
-	
-	/**
-	 * @return the sendFailedEmails
-	 */
+
 	public Set<String> getSendFailedEmails() {
 		return sendFailedEmails;
 	}
-	
-	/**
-	 * @param sendFailedEmails the sendFailedEmails to set
-	 */
+
 	public void setSendFailedEmails(Set<String> sendFailedEmails) {
 		this.sendFailedEmails = sendFailedEmails;
 	}
-	
+
+	public String getStatusMessage() {
+		return statusMessage;
+	}
+
+	public void setStatusMessage(String statusMessage) {
+		this.statusMessage = statusMessage;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
 		result = prime * result + ((malformedEmails == null) ? 0 : malformedEmails.hashCode());
 		result = prime * result + ((sendFailedEmails == null) ? 0 : sendFailedEmails.hashCode());
+		result = prime * result + ((statusMessage == null) ? 0 : statusMessage.hashCode());
 		result = prime * result + ((tokenFailedEmails == null) ? 0 : tokenFailedEmails.hashCode());
 		return result;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)
@@ -105,6 +99,11 @@ public class EmailResponse {
 				return false;
 		} else if (!sendFailedEmails.equals(other.sendFailedEmails))
 			return false;
+		if (statusMessage == null) {
+			if (other.statusMessage != null)
+				return false;
+		} else if (!statusMessage.equals(other.statusMessage))
+			return false;
 		if (tokenFailedEmails == null) {
 			if (other.tokenFailedEmails != null)
 				return false;
@@ -112,10 +111,10 @@ public class EmailResponse {
 			return false;
 		return true;
 	}
+
 	@Override
 	public String toString() {
 		return "EmailResponse [malformedEmails=" + malformedEmails + ", tokenFailedEmails=" + tokenFailedEmails
-				+ ", sendFailedEmails=" + sendFailedEmails + "]";
-	}
-	
+				+ ", sendFailedEmails=" + sendFailedEmails + ", statusMessage=" + statusMessage + "]";
+	}	
 }

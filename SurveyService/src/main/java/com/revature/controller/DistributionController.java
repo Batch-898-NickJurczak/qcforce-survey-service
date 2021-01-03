@@ -1,7 +1,8 @@
 package com.revature.controller;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import javax.mail.MessagingException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,11 +10,16 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.response.EmailResponse;
 import com.revature.service.DistributionService;
+import com.revature.util.InvalidBatchIdException;
+import com.revature.util.InvalidSurveyIdException;
 
 /**
  * This controller has three endpoints, one takes in a batch id, another takes
@@ -39,11 +45,30 @@ public class DistributionController {
 	 * 
 	 * @param batchId represents a batch identifier
 	 * @return List of incorrectly formatted emails in the database if any
+	 * @throws JsonProcessingException 
 	 */
 	@PostMapping("/distribute/{surveyId}/{batchId}")
-	private ResponseEntity<List<String>> sendEmailsByBatchId(@PathVariable int surveyId, @PathVariable int batchId) {
+	private ResponseEntity<String> sendEmailsByBatchId(@PathVariable int surveyId, @PathVariable int batchId) throws JsonProcessingException {
 
-		return null;
+		EmailResponse response;
+		ObjectMapper om = new ObjectMapper();
+		String json;
+
+		try {
+			response = distributionService.sendEmailsByBatchId(batchId, surveyId);
+			json = om.writeValueAsString(response);
+		} catch (InvalidBatchIdException | InvalidSurveyIdException | IllegalArgumentException e) {
+			json = om.writeValueAsString(null);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(json);
+		}
+
+		if (!response.getMalformedEmails().isEmpty()) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(json);
+		} else if (!response.getStatusMessage().isEmpty()) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(json);
+		} else {
+			return ResponseEntity.status(HttpStatus.OK).body(json);
+		}
 	}
 
 	/**
@@ -54,17 +79,32 @@ public class DistributionController {
 	 * @param surveyId represents a survey that will be filled out by associates
 	 * @param csv      represents a csv file of emails
 	 * @return List of incorrectly formatted emails in the database if any
+	 * @throws JsonProcessingException 
+	 * @throws MessagingException 
 	 */
 	@PostMapping("/distribute/{surveyId}")
-	private ResponseEntity<EmailResponse>sendEmailsByCSV(@PathVariable int surveyId, @RequestParam int batchId,
-			@RequestParam MultipartFile csv) {
+	@ResponseBody
+	private ResponseEntity<String> sendEmailsByCSV(@PathVariable int surveyId, @RequestParam int batchId,
+			@RequestParam MultipartFile csv) throws JsonProcessingException {
 
-		EmailResponse response = distributionService.sendEmailsByBatchIdAndCSV(batchId, surveyId, csv);
+		EmailResponse response;
+		ObjectMapper om = new ObjectMapper();
+		String json;
 
-		if (response.getMessage().equals("Malformatted emails")) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+		try {
+			response = distributionService.sendEmailsByCSV(batchId, surveyId, csv);
+			json = om.writeValueAsString(response);
+		} catch (InvalidBatchIdException | InvalidSurveyIdException | IllegalArgumentException e) {
+			json = om.writeValueAsString(null);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(json);
+		}
+
+		if (!response.getMalformedEmails().isEmpty()) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(json);
+		} else if (!response.getStatusMessage().isEmpty()) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(json);
 		} else {
-			return ResponseEntity.status(HttpStatus.OK).body(response);
+			return ResponseEntity.status(HttpStatus.OK).body(json);
 		}
 	}
 }
