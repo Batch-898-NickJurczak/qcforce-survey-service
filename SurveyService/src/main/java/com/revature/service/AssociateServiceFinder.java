@@ -4,7 +4,7 @@
 package com.revature.service;
 
 /**
- * @author Work From Home
+ * @author Michael M, Chris B
  *
  */
 public class AssociateServiceFinder implements AssociateService {
