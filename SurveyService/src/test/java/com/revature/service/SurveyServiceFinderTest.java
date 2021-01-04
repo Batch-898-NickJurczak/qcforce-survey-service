@@ -4,8 +4,6 @@
 package com.revature.service;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.when;
-
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -13,11 +11,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.cloud.client.loadbalancer.LoadBalanced;
 import org.springframework.http.HttpStatus;
-import org.springframework.test.web.reactive.server.WebTestClient;
-import org.springframework.web.reactive.function.client.WebClient;
+
+import okhttp3.mockwebserver.MockResponse;
+import okhttp3.mockwebserver.MockWebServer;
 
 /**
  * @author micha
@@ -26,10 +23,9 @@ import org.springframework.web.reactive.function.client.WebClient;
 @SpringBootTest
 class SurveyServiceFinderTest {
 
-	private SurveyServiceFinder surveyService;
+	private SurveyService surveyService;
 	
-	@MockBean
-	private WebClient webClient;
+	public static MockWebServer mockBackEnd;
 	
 	@Autowired
 	public void setSurveyService(SurveyServiceFinder surveyService) {
@@ -43,6 +39,8 @@ class SurveyServiceFinderTest {
 	 */
 	@BeforeAll
 	static void setUpBeforeClass() throws Exception {
+		mockBackEnd = new MockWebServer();
+        mockBackEnd.start();
 	}
 
 	/**
@@ -50,6 +48,7 @@ class SurveyServiceFinderTest {
 	 */
 	@AfterAll
 	static void tearDownAfterClass() throws Exception {
+		mockBackEnd.shutdown();
 	}
 
 	/**
@@ -60,11 +59,9 @@ class SurveyServiceFinderTest {
 		
 		this.surveyId = 1;
 		
-		surveyService.setWebClient(webClient);
+		String baseUrl = String.format("http://localhost:%s", mockBackEnd.getPort());
 		
-		when(webClient.get().uri("/survey/" + surveyId).exchange()
-				.map(response -> response.statusCode())
-				.block()).thenReturn(HttpStatus.OK);
+		surveyService = new SurveyServiceFinder(baseUrl);
 	}
 
 	/**
@@ -75,8 +72,15 @@ class SurveyServiceFinderTest {
 	}
 
 	@Test
-	void isVaildSurveyTest() {
+	void isVaildSurveyTest_vaildPath() {
+		mockBackEnd.enqueue(new MockResponse().setResponseCode(HttpStatus.OK.value()));
 		assertTrue(surveyService.isValidSurvey(surveyId), "Should return true if satus code is OK.");
+	}
+	
+	@Test
+	void isVaildSurveyTest_invaildPath() {
+		mockBackEnd.enqueue(new MockResponse().setResponseCode(HttpStatus.NOT_FOUND.value()));
+		assertFalse(surveyService.isValidSurvey(0), "Should return false if satus code is OK.");
 	}
 
 }

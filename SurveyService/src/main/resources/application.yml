@@ -12,7 +12,7 @@ spring:
 
   rabbitmq:
     host: ${rabbitmq_host}
-    port: ${rabbitmq_port}
+    port: ${rabbitmq_port:5672}
     username: ${rabbitmq_username}
     password: ${rabbitmq_password}
     queue-listener: ${rabbitmq_queue_listener:FormResponse-Queue}
