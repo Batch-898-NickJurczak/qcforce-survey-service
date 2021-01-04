@@ -1,12 +1,14 @@
 package com.revature.controller;
 
 import javax.mail.MessagingException;
+import javax.mail.internet.AddressException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +18,8 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.revature.response.EmailResponse;
 import com.revature.service.DistributionService;
+import com.revature.service.EmailService;
+import com.revature.service.EmailServiceImpl;
 import com.revature.util.InvalidBatchIdException;
 import com.revature.util.InvalidSurveyIdException;
 
@@ -27,14 +31,23 @@ import com.revature.util.InvalidSurveyIdException;
  * 
  * @author Acacia Holliday, Ksenia Milstein, Marc Roy, Zach Leonardo
  */
+
 @RestController
 public class DistributionController {
 
 	private DistributionService distributionService;
+	
+	private EmailService emailService;
+	
 
 	@Autowired
 	public void setDistributionService(DistributionService distributionService) {
 		this.distributionService = distributionService;
+	}
+	
+	@Autowired 
+	public void setEmailService(EmailService emailService) {
+		this.emailService = emailService;
 	}
 
 	/**
@@ -73,4 +86,27 @@ public class DistributionController {
 			return ResponseEntity.status(HttpStatus.OK).body(json);
 		}
 	}
+	
+	
+	@PostMapping("/distribute/test")
+	@ResponseBody
+	public void sendFeedBack(@RequestParam String message, @RequestParam String emailAddress) throws AddressException, MessagingException  {
+		
+		emailService.sendEmail(message, emailAddress);
+				
+	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 }
