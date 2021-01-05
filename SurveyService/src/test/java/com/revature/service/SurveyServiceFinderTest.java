@@ -4,6 +4,7 @@
 package com.revature.service;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -17,7 +18,7 @@ import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
 /**
- * @author micha
+ * @author Michael M, Chris B
  *
  */
 @SpringBootTest
@@ -74,13 +75,13 @@ class SurveyServiceFinderTest {
 	@Test
 	void isVaildSurveyTest_vaildPath() {
 		mockBackEnd.enqueue(new MockResponse().setResponseCode(HttpStatus.OK.value()));
-		assertTrue(surveyService.isValidSurvey(surveyId), "Should return true if satus code is OK.");
+		assertTrue(surveyService.isValidSurvey(surveyId), "Should return true if status code is OK.");
 	}
 	
 	@Test
 	void isVaildSurveyTest_invaildPath() {
 		mockBackEnd.enqueue(new MockResponse().setResponseCode(HttpStatus.NOT_FOUND.value()));
-		assertFalse(surveyService.isValidSurvey(0), "Should return false if satus code is OK.");
+		assertFalse(surveyService.isValidSurvey(surveyId), "Should return false if status code is NOT FOUND.");
 	}
-
+	
 }
