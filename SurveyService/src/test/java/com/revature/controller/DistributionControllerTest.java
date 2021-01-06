@@ -18,9 +18,11 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
 import org.springframework.test.context.ContextConfiguration;
+
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.google.common.collect.Sets;
@@ -364,6 +366,7 @@ class DistributionControllerTest {
 		assertEquals(
 				"{\"malformedEmails\":[],\"tokenFailedEmails\":[],\"sendFailedEmails\":[\"acacia.holliday@revature.net\"],\"statusMessage\":\"\"}",
 				result.getResponse().getContentAsString());
-
+    
 	}
+  
 }

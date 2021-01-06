@@ -16,7 +16,6 @@ import com.revature.response.EmailResponse;
  * the emails are invalid then the invalid emails will be returned. If the batch
  * id does not exist then an exception is thrown.
  */
-
 @Service
 public class DistributionServiceImpl implements DistributionService {
 
@@ -64,7 +63,6 @@ public class DistributionServiceImpl implements DistributionService {
 	 */
 	@Override
 	public EmailResponse sendEmailsByCSV(int batchId, int surveyId, MultipartFile csv) {
-		
 
 		// parse list of emails out of csv file
 		
@@ -93,6 +91,7 @@ public class DistributionServiceImpl implements DistributionService {
 		// Create url for each email and send; add failed sending emails to response
 		
 		// return email response
+
 		return null;
 	}
 

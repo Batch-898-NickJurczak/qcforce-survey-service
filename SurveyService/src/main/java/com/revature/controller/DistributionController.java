@@ -5,6 +5,7 @@ import javax.mail.internet.AddressException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -31,7 +32,6 @@ import com.revature.util.InvalidSurveyIdException;
  * 
  * @author Acacia Holliday, Ksenia Milstein, Marc Roy, Zach Leonardo
  */
-
 @RestController
 public class DistributionController {
 
@@ -92,21 +92,8 @@ public class DistributionController {
 	@ResponseBody
 	public void sendFeedBack(@RequestParam String message, @RequestParam String emailAddress) throws AddressException, MessagingException  {
 		
-		emailService.sendEmail(message, emailAddress);
-				
+		emailService.sendEmail(message, emailAddress);		
+
 	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
 	
 }
