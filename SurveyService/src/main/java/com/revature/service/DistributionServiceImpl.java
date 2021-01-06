@@ -63,10 +63,9 @@ public class DistributionServiceImpl implements DistributionService {
 	 * @param authService the authService to set
 	 */
 	@Autowired
-	public void setAuthService(AuthService authService) {
+	public void setAuthService(AuthServiceFinder authService) {
 		this.authService = authService;
 	}
-	
 	
 
 	/**
