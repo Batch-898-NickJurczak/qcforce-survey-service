@@ -89,7 +89,7 @@ public class EmailScheduler {
 			AppLogger.log.info("sendMail: Individual Email - "+ email);
 			try {
 				//Send an email notification to an associate for them to fill out a QC form  
-				emailService.sendEmails("Please complete the following QC form: <br> <a href=\"https://docs.google.com/forms/d/e/1FAIpQLSctgsH-__acrraIWMPDsV3XSFmTAujJNIxK9zKEhATsYsKHSw/viewform?usp=send_form\">Survey Link</a>", email);
+				emailService.sendEmail("Please complete the following QC form: <br> <a href=\"https://docs.google.com/forms/d/e/1FAIpQLSctgsH-__acrraIWMPDsV3XSFmTAujJNIxK9zKEhATsYsKHSw/viewform?usp=send_form\">Survey Link</a>", email);
 			} catch (AddressException e) {
 				AppLogger.log.error("sendMail: "+e.getMessage());
 			} catch (MessagingException e) {
