@@ -58,7 +58,7 @@ public class DistributionServiceImpl implements DistributionService {
 	 * @param authService the authService to set
 	 */
 	@Autowired
-	public void setAuthService(AuthServiceJWT authService) {
+	public void setAuthService(AuthServiceFinder authService) {
 		this.authService = authService;
 	}
 	
@@ -124,19 +124,15 @@ public class DistributionServiceImpl implements DistributionService {
 		// call getAssociatesByBatchId
 		// if this returns nothing, it was a bad batch Id so throw an InvalidBatchIdException
 		// We'll have a hashmap of all emails with associate Ids as keys
-		HashMap<String, Integer> associateEmailIdMap = new HashMap<String, Integer>(); //associateService.getAssociatesByBatchId(batchId);
-		associateEmailIdMap.put("", 1);
-		associateEmailIdMap.put("", 2);
-		associateEmailIdMap.put("", 3);
-		associateEmailIdMap.put("", 4);
-//		if(associateEmailIdMap.isEmpty()) {
-//			throw new InvalidBatchIdException("Invalid BatchId: " + batchId);
-//		}
-//		
-//		// validate that surveyId is valid
-//		if(!surveyService.isValidSurvey(surveyId)) {
-//			throw new InvalidSurveyIdException("Invalid SurveyId: " + surveyId);
-//		}
+		HashMap<String, Integer> associateEmailIdMap = associateService.getAssociatesByBatchId(batchId);
+		if(associateEmailIdMap.isEmpty()) {
+			throw new InvalidBatchIdException("Invalid BatchId: " + batchId);
+		}
+		
+		// validate that surveyId is valid
+		if(!surveyService.isValidSurvey(surveyId)) {
+			throw new InvalidSurveyIdException("Invalid SurveyId: " + surveyId);
+		}
 
 		// parse list of emails out of csv file
 		Set<String> emails = null;
@@ -162,17 +158,17 @@ public class DistributionServiceImpl implements DistributionService {
 				
 		EmailResponse emailResponse = new EmailResponse(); 
 		
-//		// validate list of emails. Add to emailResponse if one is malformatted but still check all others.
-//		for(String email : emails) {
-//			if(!emailService.isValidEmailAddress(email)) {
-//				emailResponse.addMalformedEmail(email);
-//			}
-//		}
-//		
-//		// if any emails were invalid, return with the list of malformatted emails
-//		if(!emailResponse.getMalformedEmails().isEmpty()) {
-//			return emailResponse;
-//		}
+		// validate list of emails. Add to emailResponse if one is malformatted but still check all others.
+		for(String email : emails) {
+			if(!emailService.isValidEmailAddress(email)) {
+				emailResponse.addMalformedEmail(email);
+			}
+		}
+		
+		// if any emails were invalid, return with the list of malformatted emails
+		if(!emailResponse.getMalformedEmails().isEmpty()) {
+			return emailResponse;
+		}
 	
 		//Start loop for each email
 		for(String email : emails) {
@@ -186,12 +182,12 @@ public class DistributionServiceImpl implements DistributionService {
 			}
 			
 			// make post api call to syncService "/surveysub" with surveyId and associateId and get surveySubmission back
-//			Integer surveySubId = surveySubmissionService.getSurveySubmissionByAssociateId(batchId, surveyId, associateId);
+			Integer surveySubId = surveySubmissionService.getSurveySubmissionByAssociateId(batchId, surveyId, associateId);
 			
 			// generate token using batchId, surveyId, and serveySubId; add failed emails into response in tokenFailed
 			String authToken = null;
 			try {
-				authToken = authService.createToken(surveyId, batchId, associateEmailIdMap.get(email));
+				authToken = authService.createToken(surveyId, batchId, surveySubId);
 			} catch (WebClientException e) {
 				e.printStackTrace();
 				emailResponse.addTokenFailedEmail(email);
