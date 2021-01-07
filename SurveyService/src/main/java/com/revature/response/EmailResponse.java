@@ -63,7 +63,7 @@ public class EmailResponse {
 	public void setSendFailedEmails(Set<String> sendFailedEmails) {
 		this.sendFailedEmails = sendFailedEmails;
 	}
-	
+
 	/**
 	 * @return the statusMessage
 	 */
