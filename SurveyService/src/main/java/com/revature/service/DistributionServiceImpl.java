@@ -45,7 +45,7 @@ public class DistributionServiceImpl implements DistributionService {
 	 * @param emailService the emailService to set
 	 */
 	@Autowired
-	public void setEmailService(EmailService emailService) {
+	public void setEmailService(EmailServiceImpl emailService) {
 		this.emailService = emailService;
 	}
 
@@ -53,7 +53,7 @@ public class DistributionServiceImpl implements DistributionService {
 	 * @param csvParser the csvParser to set
 	 */
 	@Autowired
-	public void setCsvParser(CSVParser csvParser) {
+	public void setCsvParser(CSVParserImpl csvParser) {
 		this.csvParser = csvParser;
 	}
 
@@ -70,7 +70,7 @@ public class DistributionServiceImpl implements DistributionService {
 	 * @param associateService the associateService to set
 	 */
 	@Autowired
-	public void setAssociateService(AssociateService associateService) {
+	public void setAssociateService(AssociateServiceFinder associateService) {
 		this.associateService = associateService;
 	}
 
@@ -78,7 +78,7 @@ public class DistributionServiceImpl implements DistributionService {
 	 * @param surveyService the surveyService to set
 	 */
 	@Autowired
-	public void setSurveyService(SurveyService surveyService) {
+	public void setSurveyService(SurveyServiceFinder surveyService) {
 		this.surveyService = surveyService;
 	}
 	
@@ -88,7 +88,7 @@ public class DistributionServiceImpl implements DistributionService {
 	 * @param surveySubmissionService the surveySubmissionService to set
 	 */
 	@Autowired
-	public void setSurveySubmissionService(SurveySubmissionService surveySubmissionService) {
+	public void setSurveySubmissionService(SurveySubmissionServiceFinder surveySubmissionService) {
 		this.surveySubmissionService = surveySubmissionService;
 	}
 
