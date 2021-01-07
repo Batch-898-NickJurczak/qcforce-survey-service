@@ -77,10 +77,10 @@ public class DistributionServiceImpl implements DistributionService {
 	/**
 	 * @param surveyService the surveyService to set
 	 */
-	@Autowired
-	public void setSurveyService(SurveyService surveyService) {
-		this.surveyService = surveyService;
-	}
+//	@Autowired
+//	public void setSurveyService(SurveyService surveyService) {
+//		this.surveyService = surveyService;
+//	}
 	
 	
 

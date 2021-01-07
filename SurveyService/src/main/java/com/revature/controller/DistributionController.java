@@ -68,23 +68,25 @@ public class DistributionController {
 
 		EmailResponse response;
 		ObjectMapper om = new ObjectMapper();
-		String json;
+		String json = om.writeValueAsString("Hello World");
+		
+		return ResponseEntity.status(HttpStatus.OK).body(json);
 
-		try {
-			response = distributionService.sendEmailsByCSV(batchId, surveyId, csv);
-			json = om.writeValueAsString(response);
-		} catch (InvalidBatchIdException | InvalidSurveyIdException | IllegalArgumentException e) {
-			json = om.writeValueAsString(null);
-			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(json);
-		}
-
-		if (!response.getMalformedEmails().isEmpty()) {
-			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(json);
-		} else if (!response.getStatusMessage().isEmpty()) {
-			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(json);
-		} else {
-			return ResponseEntity.status(HttpStatus.OK).body(json);
-		}
+//		try {
+//			response = distributionService.sendEmailsByCSV(batchId, surveyId, csv);
+//			json = om.writeValueAsString(response);
+//		} catch (InvalidBatchIdException | InvalidSurveyIdException | IllegalArgumentException e) {
+//			json = om.writeValueAsString(null);
+//			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(json);
+//		}
+//
+//		if (!response.getMalformedEmails().isEmpty()) {
+//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(json);
+//		} else if (!response.getStatusMessage().isEmpty()) {
+//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(json);
+//		} else {
+//			return ResponseEntity.status(HttpStatus.OK).body(json);
+//		}
 	}
 	
 	
