@@ -7,7 +7,9 @@ import static org.junit.jupiter.api.Assertions.fail;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
@@ -128,7 +130,7 @@ public class EmailParameterValidationTest {
 	 */
 	@Test
 	void testSendEmailsWithAllValidEmails() {
-		final List<String> validEmails = new ArrayList<>(Arrays.asList("acacia.holliday@revature.net",
+		final Set<String> validEmails = new HashSet<>(Arrays.asList("acacia.holliday@revature.net",
 				"ksenia.milstein@revature.net", "zach.leonardo@revature.net"));
 		assertEquals(0, service.sendEmails("Please fill out this survey", validEmails).size());
 	}
@@ -139,7 +141,7 @@ public class EmailParameterValidationTest {
 	 */
 	@Test
 	void testSendEmailsWithSomeInvalidEmails() {
-		final List<String> emails = new ArrayList<>(
+		final Set<String> emails = new HashSet<>(
 				Arrays.asList("acacia.holliday@revature.net", "ksenia.milstein@revaturenet", "zach.leonardo@revature"));
 		List<String> expectedInvalidEmails = Arrays.asList("ksenia.milstein@revaturenet", "zach.leonardo@revature");
 		assert (expectedInvalidEmails.equals(service.sendEmails("Please fill out this survey", emails)));
@@ -151,7 +153,7 @@ public class EmailParameterValidationTest {
 	 */
 	@Test
 	void testSendEmailsWithAllInvalidEmails() {
-		final List<String> emails = new ArrayList<>(
+		final Set<String> emails = new HashSet<>(
 				Arrays.asList("acacia.hollidayrevature.net", "ksenia.milstein@revaturenet", "zach.leonardo@revature"));
 		assert (emails.equals(service.sendEmails("Please fill out this survey", emails)));
 	}
@@ -165,7 +167,7 @@ public class EmailParameterValidationTest {
 	@Test
 	void testSendEmailsWithEmptyList() throws IllegalStateException {
 		assertThrows(IllegalArgumentException.class,
-				() -> service.sendEmails("Please fill out this survey", new ArrayList<String>()));
+				() -> service.sendEmails("Please fill out this survey", new HashSet<String>()));
 	}
 
 	/**
@@ -178,7 +180,7 @@ public class EmailParameterValidationTest {
 	void testSendEmailsWithEmptyMessage() throws IllegalArgumentException {
 		final List<String> validEmails = new ArrayList<>(
 				Arrays.asList("acacia.hollidayrevature.net", "ksenia.milstein@revaturenet", "zach.leonardo@revature"));
-		assertThrows(IllegalArgumentException.class, () -> service.sendEmails("", new ArrayList<String>()));
+		assertThrows(IllegalArgumentException.class, () -> service.sendEmails("", new HashSet<String>()));
 
 	}
 

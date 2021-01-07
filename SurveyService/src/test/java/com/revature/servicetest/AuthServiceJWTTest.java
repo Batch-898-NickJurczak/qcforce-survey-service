@@ -54,7 +54,7 @@ class AuthServiceJWTTest {
 	@Test
 	void testCreateToken_withValidParameters() throws InterruptedException {
 
-		int batchId = 2010;
+		String batchId = "2010";
 		int surveyId = 1;
 		Date before = new Date(System.currentTimeMillis());
 		Date beforeExp = new Date(System.currentTimeMillis() + 1000 * 60 * 14);
@@ -85,10 +85,10 @@ class AuthServiceJWTTest {
 	@Test
 	void testCreateToken_withInvalidSurveyId() {
 
-		int batchId = 2010;
+		String batchId = "2010";
 		int surveyId = -1;
 
-		assertThrows(InvalidSurveyIdException.class, () -> authService.createToken(batchId, surveyId, 1));
+		assertThrows(InvalidSurveyIdException.class, () -> authService.createToken(surveyId, batchId, 1));
 
 	}
 
@@ -100,12 +100,12 @@ class AuthServiceJWTTest {
 	@Test
 	void testCreateToken_withInvalidBatchId() {
 
-		int batchId = -1;
+		String batchId = "";
 		int surveyId = 1;
 		
-		String string = authService.createToken(batchId, surveyId, 1);
+		String string = authService.createToken(surveyId, batchId, 1);
 
-		assertThrows(InvalidBatchIdException.class, () -> authService.createToken(batchId, surveyId, 1));
+		assertThrows(InvalidBatchIdException.class, () -> authService.createToken(surveyId, batchId, 1));
 
 	}
 
