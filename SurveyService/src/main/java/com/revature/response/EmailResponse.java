@@ -3,13 +3,15 @@ package com.revature.response;
 import java.util.HashSet;
 import java.util.Set;
 
+
+
 /**
  * 
  * @author Chris, Ksenia, Michael M, Yarashlee
  *
  */
+
 public class EmailResponse {
-	
 	private Set<String> malformedEmails;
 	private Set<String> tokenFailedEmails;
 	private Set<String> sendFailedEmails;
@@ -54,10 +56,7 @@ public class EmailResponse {
 	public Set<String> getMalformedEmails() {
 		return malformedEmails;
 	}
-	
-	/**
-	 * @param malformedEmails the malformedEmails to set
-	 */
+
 	public void setMalformedEmails(Set<String> malformedEmails) {
 		this.malformedEmails = malformedEmails;
 	}
@@ -75,10 +74,7 @@ public class EmailResponse {
 	public Set<String> getTokenFailedEmails() {
 		return tokenFailedEmails;
 	}
-	
-	/**
-	 * @param tokenFailedEmails the tokenFailedEmails to set
-	 */
+
 	public void setTokenFailedEmails(Set<String> tokenFailedEmails) {
 		this.tokenFailedEmails = tokenFailedEmails;
 	}
@@ -96,14 +92,11 @@ public class EmailResponse {
 	public Set<String> getSendFailedEmails() {
 		return sendFailedEmails;
 	}
-	
-	/**
-	 * @param sendFailedEmails the sendFailedEmails to set
-	 */
+
 	public void setSendFailedEmails(Set<String> sendFailedEmails) {
 		this.sendFailedEmails = sendFailedEmails;
 	}
-	
+  
 	/**
 	 * @return the statusMessage
 	 */
@@ -165,7 +158,7 @@ public class EmailResponse {
 	public String toString() {
 		return "EmailResponse [malformedEmails=" + malformedEmails + ", tokenFailedEmails=" + tokenFailedEmails
 				+ ", sendFailedEmails=" + sendFailedEmails + ", statusMessage=" + statusMessage + "]";
-	}
 
-	
+  }
+
 }

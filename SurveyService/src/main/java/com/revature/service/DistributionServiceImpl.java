@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.Set;
 
 import javax.mail.MessagingException;
-import javax.mail.internet.AddressException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,7 +24,6 @@ import com.revature.util.InvalidSurveyIdException;
  * the emails are invalid then the invalid emails will be returned. If the batch
  * id does not exist then an exception is thrown.
  */
-
 @Service
 public class DistributionServiceImpl implements DistributionService {
 
@@ -119,6 +117,7 @@ public class DistributionServiceImpl implements DistributionService {
 	 * @param surveyId the identifier for the survey to distribute.
 	 * @param csv      the file containing associate emails.
 	 * @return
+	 * @throws MessagingException 
 	 * 
 	 */
 	@Override
@@ -207,8 +206,10 @@ public class DistributionServiceImpl implements DistributionService {
 				e.printStackTrace();
 			}
 		}
+    
 		// return email response
 		return emailResponse;
+
 	}
 
 }
