@@ -1,5 +1,6 @@
 package com.revature.response;
 
+import java.util.HashSet;
 import java.util.Set;
 
 
@@ -21,7 +22,9 @@ public class EmailResponse {
 	 */
 	public EmailResponse() {
 		super();
-		// TODO Auto-generated constructor stub
+		this.malformedEmails = new HashSet<String>();
+		this.tokenFailedEmails = new HashSet<String>();
+		this.sendFailedEmails = new HashSet<String>();
 	}
 	
 	/**
@@ -39,7 +42,17 @@ public class EmailResponse {
 			this.statusMessage = statusMessage;
 		}
 	}
-
+	
+	/**
+	 * @param malformedEmail : the malformedEmail to add to the malformedEmails set
+	 */
+	public void addMalformedEmail(String malformedEmail) {
+		this.malformedEmails.add(malformedEmail);
+	}
+	
+	/**
+	 * @return the malformedEmails
+	 */
 	public Set<String> getMalformedEmails() {
 		return malformedEmails;
 	}
@@ -47,7 +60,17 @@ public class EmailResponse {
 	public void setMalformedEmails(Set<String> malformedEmails) {
 		this.malformedEmails = malformedEmails;
 	}
+	
+	/**
+	 * @param tokenFailedEmail : the tokenFailedEmail to add to the tokenFailedEmails set
+	 */
+	public void addTokenFailedEmail(String tokenFailedEmail) {
+		this.tokenFailedEmails.add(tokenFailedEmail);
+	}
 
+	/**
+	 * @return the tokenFailedEmails
+	 */
 	public Set<String> getTokenFailedEmails() {
 		return tokenFailedEmails;
 	}
@@ -55,7 +78,17 @@ public class EmailResponse {
 	public void setTokenFailedEmails(Set<String> tokenFailedEmails) {
 		this.tokenFailedEmails = tokenFailedEmails;
 	}
-
+	
+	/**
+	 * @param sendFailedEmail : the sendFailedEmail to add to the sendFailedEmails set
+	 */
+	public void addsendFailedEmail(String sendFailedEmail) {
+		this.sendFailedEmails.add(sendFailedEmail);
+	}
+	
+	/**
+	 * @return the sendFailedEmails
+	 */
 	public Set<String> getSendFailedEmails() {
 		return sendFailedEmails;
 	}

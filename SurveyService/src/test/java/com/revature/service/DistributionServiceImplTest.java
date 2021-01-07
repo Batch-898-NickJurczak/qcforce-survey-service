@@ -8,8 +8,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.junit.jupiter.api.Assertions.fail;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -28,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
+import org.springframework.stereotype.Service;
 
 import com.revature.response.EmailResponse;
 import com.revature.service.AuthService;
@@ -72,9 +71,9 @@ class DistributionServiceImplTest {
 	int surveySubIdKsenia;
 	int surveySubIdZach;
 
-	int associateIdAcacia;
-	int associateIdKsenia;
-	int associateIdZach;
+	Integer associateIdAcacia;
+	Integer associateIdKsenia;
+	Integer associateIdZach;
 	
 	HashMap<String, Integer> associateIdEmailMap;
 	
@@ -126,6 +125,8 @@ class DistributionServiceImplTest {
 		for(String email : emails) {
 			when(emailService.isValidEmailAddress(email)).thenReturn(true);
 		}
+		
+		when(surveyService.isValidSurvey(surveyId)).thenReturn(true);
 		
 		when(associateService.getAssociatesByBatchId(batchId)).thenReturn(associateIdEmailMap);
 			
@@ -203,8 +204,7 @@ class DistributionServiceImplTest {
 		} catch (InvalidBatchIdException e) {
 			fail("Threw InvalidBatchIdException when IllegalArgumentException was exptected");
 		} catch (IllegalArgumentException e) {
-			// Expected path to take:
-			assertEquals(null, returned, "Returned EmailResponse with non-empty SendFailedEmails: " + returned.getSendFailedEmails().toString());
+			// Expected path to take
 			return;
 		}
 		
@@ -224,17 +224,16 @@ class DistributionServiceImplTest {
 		associateIdEmailMap.clear();
 		
 		when(associateService.getAssociatesByBatchId(batchId)).thenReturn(associateIdEmailMap);
-				
-		EmailResponse returned = null;
+
 		try {
-			returned = distributionService.sendEmailsByCSV(batchId, surveyId, csv);
+			distributionService.sendEmailsByCSV(batchId, surveyId, csv);
 		} catch (InvalidSurveyIdException e) {
 			fail("Threw InvalidSurveyIdException when InvalidBatchIdException was exptected");
 		} catch (IllegalArgumentException e) {
 			fail("Threw IllegalArgumentException when InvalidBatchIdException was exptected");
 		} catch (InvalidBatchIdException e) {
-			// Expected path to take:
-			assertEquals(null, returned, "Returned EmailResponse with non-empty SendFailedEmails: " + returned.getSendFailedEmails().toString());
+			// Expected path to take
+			verify(associateService).getAssociatesByBatchId(batchId);
 			return;
 		}
 		
@@ -261,8 +260,8 @@ class DistributionServiceImplTest {
 		} catch (IllegalArgumentException e) {
 			fail("Threw IllegalArgumentException when InvalidSurveyIdException was exptected");
 		} catch (InvalidSurveyIdException e) {
-			// Expected path to take:
-			assertEquals(null, returned, "Returned EmailResponse with non-empty SendFailedEmails: " + returned.getSendFailedEmails().toString());
+			// Expected path to take
+			verify(surveyService).isValidSurvey(surveyId);
 			return;
 		}
 		

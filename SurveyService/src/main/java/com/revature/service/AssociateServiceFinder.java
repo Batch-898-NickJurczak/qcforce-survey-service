@@ -5,10 +5,13 @@ package com.revature.service;
 
 import java.util.HashMap;
 
+import org.springframework.stereotype.Service;
+
 /**
  * @author Work From Home
  *
  */
+@Service
 public class AssociateServiceFinder implements AssociateService {
 
 	/**

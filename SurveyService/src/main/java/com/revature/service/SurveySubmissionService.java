@@ -9,7 +9,7 @@ public interface SurveySubmissionService {
 	 * @param batchId
 	 * @param surveyId
 	 * @param associateId
-	 * @return surveySubId
+	 * @return surveySubId : int
 	 */
 	public int getSurveySubmissionByAssociateId(String batchId, int surveyId, int associateId);
 
