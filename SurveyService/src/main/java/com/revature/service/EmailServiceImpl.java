@@ -29,26 +29,31 @@ import com.revature.config.EmailConfig;
 public class EmailServiceImpl implements EmailService {
 
 	private EmailConfig emailConfig;
-	
+
 	@Autowired
-	public void setEmailConfig(EmailConfig emailConfig)  {
+	public void setEmailConfig(EmailConfig emailConfig) {
 		this.emailConfig = emailConfig;
 	}
 
 	@Override
 	public boolean isValidEmailAddress(String email) {
-		
-		String emailRegex = "^[a-zA-Z0-9_+&*-] + (?:\\.[a-zA-Z0-9_+&*-]"
-							+ " )*@(?:[a-zA-Z0-9-]+\\.) + [a-zA-Z]{2, 7}";
-		
-		Pattern pat = Pattern.compile(emailRegex); 
-		
-        if (email == null) 
-            return false; 
-        
-        return pat.matcher(email).matches(); 
+
+		String emailRegex = "(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)"
+				+ "*|\"(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21\\x23-\\x5b\\x5d-\\x7f]"
+				+ "|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])*\")@(?:(?:[a-z0-9](?:[a-z0-9-]"
+				+ "*[a-z0-9])?\\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\\[(?:(?:25[0-5]"
+				+ "|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]"
+				+ "?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\\x01-\\x08\\x0b\\x0c\\x0e-\\x1f\\x21-\\x5a\\x53-\\x7f]"
+				+ "|\\\\[\\x01-\\x09\\x0b\\x0c\\x0e-\\x7f])+)\\])";
+
+		Pattern pat = Pattern.compile(emailRegex);
+
+		if (email == null)
+			return false;
+
+		return pat.matcher(email.toLowerCase()).matches();
 	}
-	
+
 	@Override
 	public void validateEmail(String destination) throws AddressException {
 		InternetAddress.parse(destination);
@@ -70,22 +75,22 @@ public class EmailServiceImpl implements EmailService {
 
 	@Override
 	public void sendEmail(String msg, String destination) throws AddressException, MessagingException {
-		
-		// Create a mail sender 
+
+		// Create a mail sender
 		JavaMailSenderImpl mailSender = new JavaMailSenderImpl();
 		mailSender.setHost(this.emailConfig.getHost());
 		mailSender.setPort(this.emailConfig.getPort());
 		mailSender.setUsername(this.emailConfig.getUsername());
 		mailSender.setPassword(this.emailConfig.getPassword());
-		
-		// Create an email instance 
+
+		// Create an email instance
 		SimpleMailMessage mailMessage = new SimpleMailMessage();
 		mailMessage.setFrom("qcforce@revature.net");
 		mailMessage.setTo(destination);
 		mailMessage.setSubject("Please submit feedback");
 		mailMessage.setText(msg);
-		
-		//Send Mail
+
+		// Send Mail
 		mailSender.send(mailMessage);
 	}
 }
