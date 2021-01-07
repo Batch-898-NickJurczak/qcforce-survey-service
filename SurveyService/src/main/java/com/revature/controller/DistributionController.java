@@ -63,7 +63,7 @@ public class DistributionController {
 	 */
 	@PostMapping("/distribute/{surveyId}")
 	@ResponseBody
-	private ResponseEntity<String> sendEmailsByCSV(@PathVariable int surveyId, @RequestParam int batchId,
+	private ResponseEntity<String> sendEmailsByCSV(@PathVariable int surveyId, @RequestParam String batchId,
 			@RequestParam MultipartFile csv) throws JsonProcessingException {
 
 		EmailResponse response;
