@@ -1,7 +1,14 @@
 package com.revature.service;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Properties;
+import java.util.Set;
+import java.util.regex.Pattern;
+
+import javax.mail.Authenticator;
+import javax.mail.Message;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
@@ -33,14 +40,28 @@ public class EmailServiceImpl implements EmailService {
 	public void setEmailConfig(EmailConfig emailConfig)  {
 		this.emailConfig = emailConfig;
 	}
+
+	@Override
+	public boolean isValidEmailAddress(String email) {
+		
+		String emailRegex = "^[a-zA-Z0-9_+&*-] + (?:\\.[a-zA-Z0-9_+&*-]"
+							+ " )*@(?:[a-zA-Z0-9-]+\\.) + [a-zA-Z]{2, 7}";
+		
+		Pattern pat = Pattern.compile(emailRegex); 
+		
+        if (email == null) 
+            return false; 
+        
+        return pat.matcher(email).matches(); 
+	}
 	
 	public void validateEmail(String destination) throws AddressException {
 		InternetAddress.parse(destination);
 	}
 
 	@Override
-	public List<String> sendEmails(String msg, List<String> destinations) {
-		List<String> failedDestinations = new ArrayList<>();
+	public Set<String> sendEmails(String msg, Set<String> destinations) {
+		Set<String> failedDestinations = new HashSet<>();
 		for (String destination : destinations) {
 			try {
 				sendEmail(msg, destination);

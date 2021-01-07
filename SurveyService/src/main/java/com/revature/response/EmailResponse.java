@@ -14,7 +14,7 @@ public class EmailResponse {
 	private Set<String> malformedEmails;
 	private Set<String> tokenFailedEmails;
 	private Set<String> sendFailedEmails;
-	private String statusMessage;
+	private String statusMessage = "";
 	
 	/**
 	 * 
@@ -35,7 +35,9 @@ public class EmailResponse {
 		this.malformedEmails = malformedEmails;
 		this.tokenFailedEmails = tokenFailedEmails;
 		this.sendFailedEmails = sendFailedEmails;
-		this.statusMessage = statusMessage;
+		if(statusMessage != null) {
+			this.statusMessage = statusMessage;
+		}
 	}
 
 	public Set<String> getMalformedEmails() {
@@ -61,11 +63,17 @@ public class EmailResponse {
 	public void setSendFailedEmails(Set<String> sendFailedEmails) {
 		this.sendFailedEmails = sendFailedEmails;
 	}
-
+  
+	/**
+	 * @return the statusMessage
+	 */
 	public String getStatusMessage() {
 		return statusMessage;
 	}
 
+	/**
+	 * @param statusMessage the statusMessage to set
+	 */
 	public void setStatusMessage(String statusMessage) {
 		this.statusMessage = statusMessage;
 	}
@@ -117,5 +125,7 @@ public class EmailResponse {
 	public String toString() {
 		return "EmailResponse [malformedEmails=" + malformedEmails + ", tokenFailedEmails=" + tokenFailedEmails
 				+ ", sendFailedEmails=" + sendFailedEmails + ", statusMessage=" + statusMessage + "]";
-	}	
+
+  }
+
 }

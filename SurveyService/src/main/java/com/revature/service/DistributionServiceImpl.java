@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.revature.response.EmailResponse;
+import com.revature.util.InvalidBatchIdException;
+import com.revature.util.InvalidSurveyIdException;
 
 /**
  * This service receives requests from the distribution controller, and then
@@ -50,6 +52,24 @@ public class DistributionServiceImpl implements DistributionService {
 	public void setAuthService(AuthService authService) {
 		this.authService = authService;
 	}
+
+	/**
+	 * Sends emails by batch Id. Takes survey id calls email service with batch Id emails 
+	 * received from messaging queue
+	 * and calls auth service with surveyId.
+	 * 
+	 * @param batchId - identifies the batch to recieve emails from
+	 * @param surveyId - identifies the survey to send to batch emails
+	 * @return 
+	 * 
+	 */
+	@Override
+	public EmailResponse sendEmailsByBatchId(String batchId, int surveyId) {
+		
+		// get list of emails
+		
+		return null;
+	}
 	
 	/**
 	 * Distributes survey links to specified emails within the given csv file.
@@ -62,9 +82,13 @@ public class DistributionServiceImpl implements DistributionService {
 	 * 
 	 */
 	@Override
-	public EmailResponse sendEmailsByCSV(int batchId, int surveyId, MultipartFile csv) {
-
+	public EmailResponse sendEmailsByCSV(String batchId, int surveyId, MultipartFile csv) throws 
+	InvalidSurveyIdException, InvalidBatchIdException, IllegalArgumentException{
+		
 		// parse list of emails out of csv file
+		
+		// validate that batchId is valid
+		// validate that surveyId is valid
 		
 		// return sendEmail method call
 		return null;
@@ -78,17 +102,24 @@ public class DistributionServiceImpl implements DistributionService {
 	 * @param emails
 	 * @return
 	 */
-	private EmailResponse sendEmail(int batchId, int surveyId, Set<String> emails) {
+	private EmailResponse sendEmailHelper(String batchId, int surveyId, Set<String> emails) {
+		
+		// call associate finder(Our service) to get id for that associate from this endpoint: /batch-id/{batchId}
+		// We'll have a hashmap of all emails with associate Ids as keys
+		// if this returns nothing, it was a bad batch Id so return with 404 more or less
 		
 		// validate list of emails. Flag if one is malformatted but still check all.
-
-		// call associate finder(Our service) to get id for that associate from this endpoint: /batch-id/{batchId}
+	
+		//Start loop for each email
 		
-		// make post api call to syncService "/surveysub" with surveyId and associateId and get surveySubmission back
+			// check if emails are in hashmap and pull out key
+			
+			// make post api call to syncService "/surveysub" with surveyId and associateId and get surveySubmission back
+			// if returns nothing, the surveyId was bad, return with 404 more or less
 		
-		// generate token using batchId, surveyId, and serveySubId; add failed emails into response
+			// generate token using batchId, surveyId, and serveySubId; add failed emails into response in tokenFailed
 		
-		// Create url for each email and send; add failed sending emails to response
+			// Create url for each email and send; add failed sending emails to response in sendFailed
 		
 		// return email response
 

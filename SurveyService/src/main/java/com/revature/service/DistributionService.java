@@ -13,6 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 public interface DistributionService {
 
-	public EmailResponse sendEmailsByCSV(int batchId, int surveyId, MultipartFile csv);
+	public EmailResponse sendEmailsByBatchId(String batchId, int surveyId);
+	
+	public EmailResponse sendEmailsByCSV(String batchId, int surveyId, MultipartFile csv);
 	
 }

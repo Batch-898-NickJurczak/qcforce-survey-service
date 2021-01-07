@@ -12,14 +12,14 @@ spring:
 
   rabbitmq:
     host: ${rabbitmq_host}
-    port: ${rabbitmq_port}
+    port: ${rabbitmq_port:5672}
     username: ${rabbitmq_username}
     password: ${rabbitmq_password}
     queue-listener: ${rabbitmq_queue_listener:FormResponse-Queue}
 
   data:
     mongodb:
-      uri: ${mongodb_url}
+      uri: ${mongodb_url:mongodb+srv://test123:MongoTest123!@cluster0.fs9sm.mongodb.net/test?retryWrites=true&w=majority}
       database: ${mongodb_database}
       
   mail:
