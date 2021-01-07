@@ -19,6 +19,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
+import com.revature.config.EmailConfig;
 import com.revature.service.EmailService;
 
 /**
@@ -29,12 +30,15 @@ import com.revature.service.EmailService;
  * be thrown.
  */
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = { EmailService.class })
+@ContextConfiguration(classes = { EmailService.class, EmailConfig.class })
 @SpringBootTest
-class EmailParameterValidationTest {
+public class EmailParameterValidationTest {
 
 	@Autowired
 	private EmailService service;
+	
+	@Autowired
+	private EmailConfig emailConfig;
 
 	/**
 	 * This tests if the sendEmail() method does not throw an exception when there
