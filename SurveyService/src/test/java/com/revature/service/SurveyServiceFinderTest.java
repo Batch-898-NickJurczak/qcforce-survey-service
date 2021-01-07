@@ -4,39 +4,37 @@
 package com.revature.service;
 
 import static org.junit.jupiter.api.Assertions.*;
+
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.http.HttpStatus;
+
 import okhttp3.mockwebserver.MockResponse;
 import okhttp3.mockwebserver.MockWebServer;
 
 /**
- * @author Work From Home
+ * @author Michael M, Chris B
  *
  */
-class AuthServiceFinderTest {
-	
-	private AuthService authService;
+@SpringBootTest
+class SurveyServiceFinderTest {
+
+	private SurveyService surveyService;
 	
 	public static MockWebServer mockBackEnd;
 	
-	private String token;
-
-	private String batchId;
-	
-	private int surveyId;
-	
-	private int surveySubId;
-	
-	/**
-	 * @param authService the authService to set
-	 */
-	public void setAuthService(AuthServiceFinder authService) {
-		this.authService = authService;
+	@Autowired
+	public void setSurveyService(SurveyServiceFinder surveyService) {
+		this.surveyService = surveyService;
 	}
 
+	private int surveyId;
+	
 	/**
 	 * @throws java.lang.Exception
 	 */
@@ -59,15 +57,12 @@ class AuthServiceFinderTest {
 	 */
 	@BeforeEach
 	void setUp() throws Exception {
-		this.surveyId = 1;
-		this.surveySubId = 2;
-		this.batchId = "2010";
 		
-		this.token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdXJ2ZXlJZCI6IjEyMzQ1Njc4OTAiLCJiYXRjaElkIjoiMjAxMCIsImV4cCI6MjAsImlhdCI6MjB9.rpejfxJ1pM5bZm74bpuHh92vIdqfMkwDHATLGiY35qs";
+		this.surveyId = 1;
 		
 		String baseUrl = String.format("http://localhost:%s", mockBackEnd.getPort());
 		
-		authService = new AuthServiceFinder(baseUrl);
+		surveyService = new SurveyServiceFinder(baseUrl);
 	}
 
 	/**
@@ -77,14 +72,16 @@ class AuthServiceFinderTest {
 	void tearDown() throws Exception {
 	}
 
-	/**
-	 * Checks if createToken() returns expected token when given valid 
-	 * surveyId, surveySubId, and batchId.
-	 */
 	@Test
-	void createTokenTest_withValidParams() {
-		mockBackEnd.enqueue(new MockResponse().setBody(token));
-		String returned = authService.createToken(surveyId, batchId, surveySubId);
-		assertEquals(token, returned, "Token " + token + " did not line up with returned " + returned);
+	void isVaildSurveyTest_vaildPath() {
+		mockBackEnd.enqueue(new MockResponse().setResponseCode(HttpStatus.OK.value()));
+		assertTrue(surveyService.isValidSurvey(surveyId), "Should return true if status code is OK.");
 	}
+	
+	@Test
+	void isVaildSurveyTest_invaildPath() {
+		mockBackEnd.enqueue(new MockResponse().setResponseCode(HttpStatus.NOT_FOUND.value()));
+		assertFalse(surveyService.isValidSurvey(surveyId), "Should return false if status code is NOT FOUND.");
+	}
+	
 }

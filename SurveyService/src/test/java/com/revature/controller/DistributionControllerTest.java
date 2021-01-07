@@ -4,8 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.verify;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.util.Set;
 
 import javax.mail.MessagingException;
@@ -22,7 +20,6 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
-import org.springframework.test.web.servlet.request.MockMultipartHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import com.google.common.collect.Sets;
@@ -54,7 +51,7 @@ class DistributionControllerTest {
 	void distributionControllerSendEmailsByCSV_withoutError() throws Exception {
 
 		// input parameters
-		final int validBatchId = 2010;
+		final String validBatchId = "2010-Nick";
 		final int surveyId = 100;
 		MockMultipartFile emailFile = new MockMultipartFile("csv", "emails.csv", "text/csv",
 				"acacia.holliday@revature.net, ksenia.milstein@revature.net, zach.leonardo@revature.net".getBytes());
@@ -70,7 +67,7 @@ class DistributionControllerTest {
 
 		// when
 		RequestBuilder request = MockMvcRequestBuilders.multipart("/distribute/" + surveyId).file(emailFile)
-				.param("batchId", Integer.toString(validBatchId));
+				.param("batchId", validBatchId);
 		MvcResult result = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
 		verify(service).sendEmailsByCSV(validBatchId, surveyId, emailFile);
 
@@ -87,7 +84,7 @@ class DistributionControllerTest {
 	void distributionControllerSendEmailsByCsv_invalidBatchId() throws Exception {
 
 		// input parameters
-		final int invalidBatchId = 3010; // does not exist
+		final String invalidBatchId = "3010-Bob"; // does not exist
 		final int surveyId = 100;
 		MockMultipartFile emailFile = new MockMultipartFile("csv", "emails.csv", "text/plain",
 				"acacia.holliday@revature.net, ksenia.milstein@revature.net, zach.leonardo@revature.net".getBytes());
@@ -98,7 +95,7 @@ class DistributionControllerTest {
 
 		// when
 		RequestBuilder request = MockMvcRequestBuilders.multipart("/distribute/" + surveyId).file(emailFile)
-				.param("batchId", Integer.toString(invalidBatchId));
+				.param("batchId", invalidBatchId);
 		MvcResult result = mockMvc.perform(request).andExpect(status().isNotFound()).andReturn();
 		verify(service).sendEmailsByCSV(invalidBatchId, surveyId, emailFile);
 
@@ -115,7 +112,7 @@ class DistributionControllerTest {
 	void distributionControllerSendEmailsByCsv_invalidSurveyId() throws Exception {
 
 		// input parameters
-		final int validBatchId = 2010;
+		final String validBatchId = "2010-Nick";
 		final int invalidSurveyId = 404; // does not exist
 		MockMultipartFile emailFile = new MockMultipartFile("csv", "emails.csv", "text/plain",
 				"acacia.holliday@revature.net, ksenia.milstein@revature.net, zach.leonardo@revature.net".getBytes());
@@ -126,7 +123,7 @@ class DistributionControllerTest {
 
 		// when
 		RequestBuilder request = MockMvcRequestBuilders.multipart("/distribute/" + invalidSurveyId).file(emailFile)
-				.param("batchId", Integer.toString(validBatchId));
+				.param("batchId", validBatchId);
 		MvcResult result = mockMvc.perform(request).andExpect(status().isNotFound()).andReturn();
 		verify(service).sendEmailsByCSV(validBatchId, invalidSurveyId, emailFile);
 
@@ -143,7 +140,7 @@ class DistributionControllerTest {
 	void distributionControllerSendEmailsCSV_invalidSurveyIdAndBatchId() throws Exception {
 
 		// input parameters
-		final int invalidBatchId = 3010; // does not exist
+		final String invalidBatchId = "3010-Bob"; // does not exist
 		final int invalidSurveyId = 404; // does not exist
 		MockMultipartFile emailFile = new MockMultipartFile("csv", "emails.csv", "text/plain",
 				"acacia.holliday@revature.net, ksenia.milstein@revature.net, zach.leonardo@revature.net".getBytes());
@@ -154,7 +151,7 @@ class DistributionControllerTest {
 
 		// when
 		RequestBuilder request = MockMvcRequestBuilders.multipart("/distribute/" + invalidSurveyId).file(emailFile)
-				.param("batchId", Integer.toString(invalidBatchId));
+				.param("batchId", invalidBatchId);
 		MvcResult result = mockMvc.perform(request).andExpect(status().isNotFound()).andReturn();
 		verify(service).sendEmailsByCSV(invalidBatchId, invalidSurveyId, emailFile);
 
@@ -171,7 +168,7 @@ class DistributionControllerTest {
 	void distributionControllerSendEmailsByCSV_withInvalidEmail() throws Exception {
 
 		// input parameters
-		final int validBatchId = 3010;
+		final String validBatchId = "3010-Bob";
 		final int validSurveyId = 404;
 		MockMultipartFile emailFile = new MockMultipartFile("csv", "emails.csv", "text/plain",
 				"acacia.hollidayrevature.net, ksenia.milstein@revature.net, zach.leonardo@revature.net".getBytes());
@@ -188,7 +185,7 @@ class DistributionControllerTest {
 
 		// when
 		RequestBuilder request = MockMvcRequestBuilders.multipart("/distribute/" + validSurveyId).file(emailFile)
-				.param("batchId", Integer.toString(validBatchId));
+				.param("batchId", validBatchId);
 		MvcResult result = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
 		verify(service).sendEmailsByCSV(validBatchId, validSurveyId, emailFile);
 
@@ -207,7 +204,7 @@ class DistributionControllerTest {
 	void distributionControllerSendEmailsByCSV_withMultipleInvalidEmails() throws Exception {
 
 		// input parameters
-		final int validBatchId = 3010;
+		final String validBatchId = "3010-Bob";
 		final int validSurveyId = 404;
 		MockMultipartFile emailFile = new MockMultipartFile("csv", "emails.csv", "text/plain",
 				"acacia.hollidayrevature.net, ksenia.milstein@revature.net, zach.leonardo@revature.net".getBytes());
@@ -225,7 +222,7 @@ class DistributionControllerTest {
 
 		// when
 		RequestBuilder request = MockMvcRequestBuilders.multipart("/distribute/" + validSurveyId).file(emailFile)
-				.param("batchId", Integer.toString(validBatchId));
+				.param("batchId", validBatchId);
 		MvcResult result = mockMvc.perform(request).andExpect(status().isBadRequest()).andReturn();
 		verify(service).sendEmailsByCSV(validBatchId, validSurveyId, emailFile);
 
@@ -242,7 +239,7 @@ class DistributionControllerTest {
 	void distributionControllerSendEmailsByBatchId_withCSVNotFound() throws Exception {
 
 		// input parameters
-		final int validBatchId = 3010;
+		final String validBatchId = "3010-Bob";
 		final int validSurveyId = 404;
 		MockMultipartFile emailFile = new MockMultipartFile("csv", "non-existing-file.csv", "text/plain",
 				"".getBytes());
@@ -258,7 +255,7 @@ class DistributionControllerTest {
 
 		// when
 		RequestBuilder request = MockMvcRequestBuilders.multipart("/distribute/" + validSurveyId).file(emailFile)
-				.param("batchId", Integer.toString(validBatchId));
+				.param("batchId", validBatchId);
 		MvcResult result = mockMvc.perform(request).andExpect(status().isInternalServerError()).andReturn();
 		verify(service).sendEmailsByCSV(validBatchId, validSurveyId, emailFile);
 
@@ -276,7 +273,7 @@ class DistributionControllerTest {
 	void distributionControllerSendEmailsByBatchId_withEmptyCSV() throws Exception {
 
 		// input parameters
-		final int validBatchId = 3010;
+		final String validBatchId = "3010-Bob";
 		final int validSurveyId = 404;
 		MockMultipartFile csvFile = new MockMultipartFile("csv", "email.csv", "text/plain", "".getBytes());
 
@@ -285,7 +282,7 @@ class DistributionControllerTest {
 
 		// when
 		RequestBuilder request = MockMvcRequestBuilders.multipart("/distribute/" + validSurveyId).file(csvFile)
-				.param("batchId", Integer.toString(validBatchId));
+				.param("batchId", validBatchId);
 		MvcResult result = mockMvc.perform(request).andExpect(status().isNotFound()).andReturn();
 		verify(service).sendEmailsByCSV(validBatchId, validSurveyId, csvFile);
 
@@ -304,7 +301,7 @@ class DistributionControllerTest {
 	void distributionControllerSendEmailsByCsv_withMultipleMessagingException() throws Exception {
 
 		// input parameters
-		final int validBatchId = 2010;
+		final String validBatchId = "2010-Nick";
 		final int surveyId = 100;
 		MockMultipartFile csvFile = new MockMultipartFile("csv", "emails.csv", "text/plain",
 				"acacia.holliday@revature.net, ksenia.milstein@revature.net, zach.leonardo@revature.net".getBytes());
@@ -322,7 +319,7 @@ class DistributionControllerTest {
 
 		// when
 		RequestBuilder request = MockMvcRequestBuilders.multipart("/distribute/" + surveyId).file(csvFile)
-				.param("batchId", Integer.toString(validBatchId));
+				.param("batchId", validBatchId);
 		MvcResult result = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
 		verify(service).sendEmailsByCSV(validBatchId, surveyId, csvFile);
 
@@ -341,7 +338,7 @@ class DistributionControllerTest {
 	void distributionControllerSendEmailsByCSV_withOneMessagingException() throws Exception {
 
 		// input parameters
-		final int validBatchId = 2010;
+		final String validBatchId = "2010-Nick";
 		final int surveyId = 100;
 		MockMultipartFile csvFile = new MockMultipartFile("csv", "emails.csv", "text/plain",
 				"acacia.holliday@revature.net, ksenia.milstein@revature.net, zach.leonardo@revature.net".getBytes());
@@ -358,7 +355,7 @@ class DistributionControllerTest {
 
 		// when
 		RequestBuilder request = MockMvcRequestBuilders.multipart("/distribute/" + surveyId).file(csvFile)
-				.param("batchId", Integer.toString(validBatchId));
+				.param("batchId", validBatchId);
 		MvcResult result = mockMvc.perform(request).andExpect(status().isOk()).andReturn();
 		verify(service).sendEmailsByCSV(validBatchId, surveyId, csvFile);
 

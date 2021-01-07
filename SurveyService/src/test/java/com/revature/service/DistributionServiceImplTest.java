@@ -11,29 +11,15 @@ import org.junit.jupiter.api.Test;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.InjectMocks;
-import org.mockito.MockitoAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.stereotype.Service;
-
 import com.revature.response.EmailResponse;
-import com.revature.service.AuthService;
-import com.revature.service.CSVParser;
-import com.revature.service.DistributionService;
-import com.revature.service.DistributionServiceImpl;
-import com.revature.service.EmailService;
 import com.revature.util.InvalidBatchIdException;
 import com.revature.util.InvalidSurveyIdException;
 

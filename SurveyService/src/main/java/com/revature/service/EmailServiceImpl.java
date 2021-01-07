@@ -1,14 +1,8 @@
 package com.revature.service;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
-import java.util.Properties;
 import java.util.Set;
 import java.util.regex.Pattern;
-
-import javax.mail.Authenticator;
-import javax.mail.Message;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.AddressException;
@@ -55,6 +49,7 @@ public class EmailServiceImpl implements EmailService {
         return pat.matcher(email).matches(); 
 	}
 	
+	@Override
 	public void validateEmail(String destination) throws AddressException {
 		InternetAddress.parse(destination);
 	}

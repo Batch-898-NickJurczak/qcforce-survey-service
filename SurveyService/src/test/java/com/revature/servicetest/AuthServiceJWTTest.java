@@ -10,14 +10,11 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.revature.controller.DistributionController;
 import com.revature.service.AuthService;
 import com.revature.service.AuthServiceJWT;
-import com.revature.service.DistributionService;
 import com.revature.util.InvalidBatchIdException;
 import com.revature.util.InvalidSurveyIdException;
 
@@ -54,7 +51,7 @@ class AuthServiceJWTTest {
 	@Test
 	void testCreateToken_withValidParameters() throws InterruptedException {
 
-		int batchId = 2010;
+		String batchId = "2010-Nick";
 		int surveyId = 1;
 		Date before = new Date(System.currentTimeMillis());
 		Date beforeExp = new Date(System.currentTimeMillis() + 1000 * 60 * 14);
@@ -67,7 +64,7 @@ class AuthServiceJWTTest {
 			Claims claims = Jwts.parser().setSigningKey(DatatypeConverter.parseBase64Binary(secret))
 					.parseClaimsJws(token).getBody();
 			assertEquals((int) claims.get("surveyId"), surveyId);
-			assertEquals((int) claims.get("batchId"), batchId);
+			assertEquals(claims.get("batchId"), batchId);
 			assertTrue(claims.getIssuedAt().after(before));
 			assertTrue(claims.getIssuedAt().before(after));
 			assertTrue(claims.getExpiration().after(beforeExp));
@@ -85,10 +82,10 @@ class AuthServiceJWTTest {
 	@Test
 	void testCreateToken_withInvalidSurveyId() {
 
-		int batchId = 2010;
+		String batchId = "2010-Nick";
 		int surveyId = -1;
 
-		assertThrows(InvalidSurveyIdException.class, () -> authService.createToken(batchId, surveyId, 1));
+		assertThrows(InvalidSurveyIdException.class, () -> authService.createToken(surveyId, batchId, 1));
 
 	}
 
@@ -100,12 +97,12 @@ class AuthServiceJWTTest {
 	@Test
 	void testCreateToken_withInvalidBatchId() {
 
-		int batchId = -1;
+		String batchId = "";
 		int surveyId = 1;
 		
-		String string = authService.createToken(batchId, surveyId, 1);
+		String string = authService.createToken(surveyId, batchId, 1);
 
-		assertThrows(InvalidBatchIdException.class, () -> authService.createToken(batchId, surveyId, 1));
+		assertThrows(InvalidBatchIdException.class, () -> authService.createToken(surveyId, batchId, 1));
 
 	}
 
