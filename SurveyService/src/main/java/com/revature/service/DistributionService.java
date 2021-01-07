@@ -1,13 +1,18 @@
 package com.revature.service;
 
 import java.util.List;
+import java.util.Set;
+
+import javax.mail.MessagingException;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import com.revature.response.EmailResponse;
 
 import org.springframework.web.multipart.MultipartFile;
 
 public interface DistributionService {
-	
-	public List<String> sendEmailsByBatchId(int batchId);
-	
-	public List<String> sendEmailsByBatchIdAndCSV(int batchId, MultipartFile csv);
 
+	public EmailResponse sendEmailsByCSV(int batchId, int surveyId, MultipartFile csv);
+	
 }
