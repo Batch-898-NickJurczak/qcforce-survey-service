@@ -5,8 +5,8 @@ import javax.mail.internet.AddressException;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -31,6 +31,7 @@ import com.revature.util.InvalidSurveyIdException;
  * @author Acacia Holliday, Ksenia Milstein, Marc Roy, Zach Leonardo
  */
 @RestController
+@CrossOrigin
 public class DistributionController {
 
 	private DistributionService distributionService;
@@ -66,25 +67,23 @@ public class DistributionController {
 
 		EmailResponse response;
 		ObjectMapper om = new ObjectMapper();
-		String json = om.writeValueAsString("Hello World");
-		
-		return ResponseEntity.status(HttpStatus.OK).body(json);
+		String json;
 
-//		try {
-//			response = distributionService.sendEmailsByCSV(batchId, surveyId, csv);
-//			json = om.writeValueAsString(response);
-//		} catch (InvalidBatchIdException | InvalidSurveyIdException | IllegalArgumentException e) {
-//			json = om.writeValueAsString(null);
-//			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(json);
-//		}
-//
-//		if (!response.getMalformedEmails().isEmpty()) {
-//			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(json);
-//		} else if (!response.getStatusMessage().isEmpty()) {
-//			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(json);
-//		} else {
-//			return ResponseEntity.status(HttpStatus.OK).body(json);
-//		}
+		try {
+			response = distributionService.sendEmailsByCSV(batchId, surveyId, csv);
+			json = om.writeValueAsString(response);
+		} catch (InvalidBatchIdException | InvalidSurveyIdException | IllegalArgumentException e) {
+			json = om.writeValueAsString(null);
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(json);
+		}
+
+		if (!response.getMalformedEmails().isEmpty()) {
+			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(json);
+		} else if (!response.getStatusMessage().isEmpty()) {
+			return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(json);
+		} else {
+			return ResponseEntity.status(HttpStatus.OK).body(json);
+		}
 	}
 	
 	

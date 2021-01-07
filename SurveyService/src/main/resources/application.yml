@@ -58,9 +58,9 @@ survey_service:
   receiveEmailList_baseUrl: ${receiveEmailList_baseUrl:"http://localhost:8086"}
   receiveEmailList_endpoint: ${receiveEmailList_endpoint:"/associate/active-emails"}
 
-  email_service:
-    username: ${email_service_username}
-    password: ${email_service_password}
+#  email_service:
+#    username: ${email_service_username:9546ac340f29c0}
+#    password: ${email_service_password:800ebde996a5bc}
 
   auth_service:
     secret: ${qcforce_token_secret}
